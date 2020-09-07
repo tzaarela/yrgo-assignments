@@ -44,11 +44,9 @@ void setup() {
 
 void draw(){
 
-	//TestValues
-  	for (Letter o : letterList) {
-      
-  	}
+	//saveFrame("frame-######.png");
 
+	//TestValues
   	letterWidth = 51;
   	letterHeight = 59;
 	shadowOffsetX = 3;
@@ -73,9 +71,6 @@ void showCoordinates(){
 	text("Y: " + textPositionY, 20, 80, 20);
 }
 
-/**
-	shows the framerate
-*/
 void showFrameRate(){	
 
 	if (frameCounter == 0){
@@ -138,9 +133,6 @@ void PrintLetters(){
 	}
 }
 
-/**
-	Move horizontally, has the option to bounce back.
-*/
 float MoveX(boolean canBounce, float xPos){	
 	
 	if (canBounce){
@@ -160,9 +152,6 @@ float MoveX(boolean canBounce, float xPos){
   	return xPos;
 }
 
-/**
-	Move vertically, has the option to bounce back.
-*/
 float MoveY(boolean canBounce, float moveY ){
 	
 	if (canBounce){
@@ -205,7 +194,6 @@ void CreateTrail() {
 	float centerX;
 	float centerY;
 	float lettersLength;
-	
 	
 	centerX = textPositionX + ((letterList.size() + 3) * (letterWidth + letterSpacing) / 2);
 	centerY = textPositionY + letterHeight / 2;
@@ -301,11 +289,6 @@ void printT(Letter letter, boolean isShadow){
  	 	yPos);
 }
 
-/** 
-	Prints the letter A in position of x and y,
-	strokeColor,
-	useShadows
-*/
 void printA(Letter letter, boolean isShadow){
   
   float xPos;
@@ -342,11 +325,6 @@ void printA(Letter letter, boolean isShadow){
    	   	yPos + letterHeight);
 }
 
-/** 
-	Prints the letter Z in position of x and y,
-	strokeColor,
-	useShadows
-*/
 void printZ(Letter letter, boolean isShadow){
 
 	float xPos;
