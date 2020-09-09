@@ -43,9 +43,6 @@ void setup() {
 }
 
 void draw(){
-
-	//saveFrame("frame-######.png");
-
 	//TestValues
   	letterWidth = 51;
   	letterHeight = 59;
