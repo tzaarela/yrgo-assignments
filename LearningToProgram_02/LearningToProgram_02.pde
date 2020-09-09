@@ -195,7 +195,6 @@ void createPoints()
 
 PGraphics createGrabber(int xPos, int yPos)
 {
-    
     PGraphics grabber = createGraphics(100, 100);
 
     println("grab X: " + xPos);
