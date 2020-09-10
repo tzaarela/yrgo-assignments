@@ -6,12 +6,11 @@ public class Point{
     Point down;
     Point right;
     Point left;
+    Grabber grabber;
 
-    PGraphics grabber;
-
-    public Point(int xPos, int yPos, PGraphics grabber){
+    public Point(int xPos, int yPos){
         this.xPos = xPos;
         this.yPos = yPos;
-        this.grabber = grabber;
+        grabber = new Grabber();
     }
 }

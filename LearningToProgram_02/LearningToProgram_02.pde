@@ -3,29 +3,43 @@ import java.util.Collections;
 import java.lang.Math;
 
 int boxSize = 80;
-int horizontal = 5;
-int vertical = 5;
+int horizontal = 10;
+int vertical = 10;
 int grabberOffset = 50;
 
 int screenSizeX;
 int screenSizeY;
 
-double grabDistance = 5;
+double grabDistance = 10;
 Point grabbedPoint;
 Point[][] gridPoints; 
 color[] gridColors;
+ArrayList<Grabber> grabbers;
+
+PGraphics grabGraphics;
+PGraphics grabGraphics2;
+
+PImage pict;
+PImage pict2;
 
 void setup()
 {
     frameRate(300);
-    screenSizeX = 400;
-    screenSizeY = 400;
-    grabbedPoint = new Point(0,0, new PGraphics());
-    gridPoints = new Point[6][6];
+    screenSizeX = 800;
+    screenSizeY = 800;
+    grabbers = new ArrayList<Grabber>();  
+    grabbedPoint = new Point(0,0);
+    gridPoints = new Point[12][12];
     gridColors = new color[] { #FF46FF, #0402FF, #46FF01 };
     surface.setSize(screenSizeX + 1, screenSizeY + 1);
+    pict = loadImage("grabber.png");
+    pict2 = loadImage("grabberPressed.png");
+
+    grabGraphics = createGraphics(100, 100);
+    grabGraphics2 = createGraphics(100, 100);
     strokeWeight(1);
     createPoints();
+    createGrabbers();
 }
 
 void draw()
@@ -46,19 +60,9 @@ void drawGrid()
         {   
             p = gridPoints[x][y];
 
-            if(p.up != null)
-            {
-                line(p.xPos, p.yPos, p.up.xPos, p.up.yPos);
-            }
-
             if(p.down != null)
             {
                 line(p.xPos, p.yPos, p.down.xPos, p.down.yPos);
-            }
-
-            if(p.left != null)
-            {
-                line(p.xPos, p.yPos, p.left.xPos, p.left.yPos);
             }
 
             if(p.right != null)
@@ -71,13 +75,16 @@ void drawGrid()
     }
 }
 
-void drawGrabber(Point point)
-{   
-    int xPos = point.xPos - grabberOffset;
-    int yPos = point.yPos - grabberOffset;
-    PGraphics grabber = point.grabber;
-
-    image(grabber,xPos,yPos);
+void drawGrabber(Point p)
+{  
+    if (p.grabber.isGrabbed)
+    {
+        image(pict2, p.xPos - 50, p.yPos - 50);
+    }
+    else
+    {
+        image(pict, p.xPos - 50, p.yPos - 50);
+    }
 }
 
 void debugMode()
@@ -100,24 +107,28 @@ void mousePressed()
 {
     Point closestPoint = findClosestPoint(mouseX, mouseY);
 
-    println("closest X: " + closestPoint.xPos);
-    println("closest Y: " + closestPoint.yPos);
+    if(closestPoint != null) 
+    {
+        println("closest X: " + closestPoint.xPos);
+        println("closest Y: " + closestPoint.yPos);
 
-    double distanceToPoint = dist(mouseX, mouseY, closestPoint.xPos, closestPoint.yPos);
+        double distanceToPoint = dist(mouseX, mouseY, closestPoint.xPos, closestPoint.yPos);
 
-    if (grabDistance >= distanceToPoint){
-        grabbedPoint = closestPoint;
+        if (grabDistance >= distanceToPoint){
+            grabbedPoint = closestPoint;
+            grabbedPoint.grabber.isGrabbed = true;
+        }
     }
 }
 
 void mouseReleased()
 {
-    grabbedPoint = null;
+    grabbedPoint.grabber.isGrabbed = false;
 }
 
 void mouseDragged()
 {   
-    if (grabbedPoint != null){
+    if (grabbedPoint.grabber.isGrabbed){
         grabbedPoint.xPos = mouseX;
         grabbedPoint.yPos = mouseY;
     }
@@ -126,7 +137,7 @@ void mouseDragged()
 Point findClosestPoint(int xPos, int yPos)
 {
     float closestDistance = 0;
-    Point closestPoint = new Point(0,0, null);
+    Point closestPoint = new Point(0,0);
 
     for (int x = 0; x < horizontal; ++x)
     {
@@ -165,8 +176,7 @@ void createPoints()
                     println("gridY: " + gridPosY);
                     if(z == 0)
                     {
-                        // PGraphics grabber = 
-                        gridPoints[gridPosX][gridPosY] = new Point(x, y, createGrabber(x, y));
+                        gridPoints[gridPosX][gridPosY] = new Point(x, y);
                     }
                     if(z == 1)
                     {
@@ -193,25 +203,31 @@ void createPoints()
     }
 }
 
-PGraphics createGrabber(int xPos, int yPos)
+void createGrabbers()
 {
-    PGraphics grabber = createGraphics(100, 100);
+    grabGraphics.beginDraw();
+    grabGraphics.background(0,0);
+    grabGraphics.noFill();
+    grabGraphics.noStroke();
+    grabGraphics.fill(33,178,33);
+    grabGraphics.ellipse(50,50,30,30);
+    grabGraphics.filter(BLUR, 6);
+    grabGraphics.fill(33,178,33);
+    grabGraphics.ellipse(50,50,20,20);
+    grabGraphics.endDraw();
 
-    println("grab X: " + xPos);
-    println("grab Y: " + yPos);
+    grabGraphics.save("grabber.png");
 
-    grabber.beginDraw();
-    grabber.background(0,0,0,0);
-    grabber.noFill();
-    grabber.noStroke();  
-    grabber.fill(33,178,33);
-    grabber.ellipse(xPos - 30,yPos- 30,40,40);
-    grabber.filter(BLUR, 6);
-    grabber.fill(33,178,33);
-    grabber.ellipse(xPos - 30,yPos -30,20,20);
+    grabGraphics2.beginDraw();
+    grabGraphics2.background(0,0);
+    grabGraphics2.noFill();
+    grabGraphics2.noStroke();
+    grabGraphics2.fill(228,31,22);
+    grabGraphics2.ellipse(50,50,30,30);
+    grabGraphics2.filter(BLUR, 6);
+    grabGraphics2.fill(228,31,22);
+    grabGraphics2.ellipse(50,50,20,20);
+    grabGraphics2.endDraw();
 
-    grabber.endDraw();
-    
-    return grabber;
+    grabGraphics2.save("grabberPressed.png");
 }
-
