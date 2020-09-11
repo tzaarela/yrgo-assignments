@@ -54,7 +54,6 @@ public void setup()
     surface.setSize(screenSizeX + 1, screenSizeY + 1);
     pict = loadImage("grabber.png");
     pict2 = loadImage("grabberPressed.png");
-
     grabGraphics = createGraphics(100, 100);
     grabGraphics2 = createGraphics(100, 100);
     strokeWeight(1);
@@ -82,11 +81,26 @@ public void drawGrid()
 
             if(p.down != null)
             {
+                float distBetweenPoints = dist(p.xPos, p.yPos, p.down.xPos, p.down.yPos);
+                if(distBetweenPoints > 80){
+                    p.xPos += 1;
+                    p.yPos += 1;
+                    p.down.xPos += 1;
+                    p.down.yPos += 1;
+                }
+                
                 line(p.xPos, p.yPos, p.down.xPos, p.down.yPos);
             }
 
             if(p.right != null)
             {
+                float distBetweenPoints = dist(p.xPos, p.yPos, p.right.xPos, p.right.yPos);
+                if(distBetweenPoints > 80){
+                    p.xPos += 1;
+                    p.yPos += 1;
+                    p.right.xPos += 1;
+                    p.right.yPos += 1;
+                }
                 line(p.xPos, p.yPos, p.right.xPos, p.right.yPos);
             }
 
