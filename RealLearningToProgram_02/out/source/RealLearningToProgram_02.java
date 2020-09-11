@@ -25,32 +25,31 @@ int rotationAngle = 0;
 
 public void setup()
 {
-    pm = new ParabolicMachine(200, 200, 50);
+    frameRate(300);
+    pm = new ParabolicMachine(resolutionX, resolutionY, 50);
     surface.setSize(resolutionX, resolutionY);
     surface.setLocation(600, 0);
     strokeWeight(2);
-    pm.drawCurve(200, 200);
-    curveImage = loadImage("curve.png");
-    curveImage2 = loadImage("curve.png");
+    
 }
 
 public void draw()
 {   
     background(0);
+
     pm.drawCircle(200, 45, color(150, 0, 150));
     pm.drawCircle(500, 45, color(20, 20, 20));
     pm.drawCircle(700, 35, color(100, 0, 150));
 
-    
     translate(500, 500);
     rotate(radians(90 + rotationAngle));
-    image(curveImage, 0, 0);
-    rotate(radians(90));
-    image(curveImage, 0, 0);
-    rotate(radians(90));
-    image(curveImage, 0, 0);
-    rotate(radians(90));
-    image(curveImage, 0, 0);
+    pm.drawCurve(200, 200);
+    scale(1,-1);
+    pm.drawCurve(200, 200);
+    rotate(radians(180));
+    pm.drawCurve(200, 200);
+    scale(1,-1);
+    pm.drawCurve(200, 200);
 
     rotationAngle += 1;
 
@@ -61,39 +60,43 @@ public class ParabolicMachine
     float yAxis;
     float pixelDividerX;
     float pixelDividerY;
+    float centerOfScreenX;
+    float centerOfScreenY;
     int numberOfLines;
     PGraphics curve;
+
         
     public ParabolicMachine(float xAxis, float yAxis, int numberOfLines)
     {
         this.xAxis = xAxis;
         this.yAxis = yAxis;
         this.numberOfLines = numberOfLines;
-        pixelDividerX = xAxis / numberOfLines;
-        pixelDividerY = yAxis / numberOfLines;
         
+        centerOfScreenX = xAxis / 2;
+        centerOfScreenY = yAxis / 2;
+        curve = createGraphics(200, 200);
     }
 
-    public void drawCurve(int width, int height)
+    public void drawCurve(float width, float height)
     {
-        curve = createGraphics(width, height);
-        curve.beginDraw();
+        float pixelDividerX = width / numberOfLines;
+        float pixelDividerY = height / numberOfLines;
+
         for (int line = 0; line < numberOfLines; ++line) 
         {
-            curve.stroke(20,20,20);
-            if(line % 3 == 2)
+            stroke(20,20,20);
+            if(line % 3 == 0)
             {
-                curve.stroke(150, 0, 150);
+                stroke(150, 0, 150);
             }
 
-            float lineStartY = line * pixelDividerY;
+            float lineStartY = line * (height / numberOfLines);
             float lineStartX = 0;
-            float lineEndX = pixelDividerX + (pixelDividerX * line);
-            float lineEndY = pixelDividerY * numberOfLines;
-            curve.line(lineStartX, lineStartY, lineEndX, lineEndY);
+            float lineEndX = line * (width / numberOfLines);
+            float lineEndY = height;
+            line(lineStartX, lineStartY, lineEndX, lineEndY);
         }
-        curve.endDraw();
-        curve.save("curve.png");
+        
     }
 
     public void drawCircle(float diameter, float circlePointSpan, int strokeColor)
@@ -101,7 +104,7 @@ public class ParabolicMachine
         stroke(strokeColor);
         float radius = diameter / 2;
         float angle = 360 / numberOfLines + 1;
-
+        
         for (int i = 0; i < numberOfLines; ++i)
         {
             if (i * angle <= 360)
@@ -112,11 +115,12 @@ public class ParabolicMachine
                 float x2 = radius * cos(radians((i + 30) * angle));
                 float y2 = radius * sin(radians((i + 30) * angle));
 
-                line(x1 + 500 ,y1 + 500, x2 + 500, y2 + 500);
+                line(x1 + centerOfScreenX ,y1 + centerOfScreenY, x2 + centerOfScreenX, y2 + centerOfScreenY);
             }
         }
     }
 }
+  public void settings() {  smooth(2); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "RealLearningToProgram_02" };
     if (passedArgs != null) {

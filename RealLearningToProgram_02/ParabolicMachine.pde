@@ -4,39 +4,43 @@ public class ParabolicMachine
     float yAxis;
     float pixelDividerX;
     float pixelDividerY;
+    float centerOfScreenX;
+    float centerOfScreenY;
     int numberOfLines;
     PGraphics curve;
+
         
     public ParabolicMachine(float xAxis, float yAxis, int numberOfLines)
     {
         this.xAxis = xAxis;
         this.yAxis = yAxis;
         this.numberOfLines = numberOfLines;
-        pixelDividerX = xAxis / numberOfLines;
-        pixelDividerY = yAxis / numberOfLines;
         
+        centerOfScreenX = xAxis / 2;
+        centerOfScreenY = yAxis / 2;
+        curve = createGraphics(200, 200);
     }
 
-    void drawCurve(int width, int height)
+    void drawCurve(float width, float height)
     {
-        curve = createGraphics(width, height);
-        curve.beginDraw();
+        float pixelDividerX = width / numberOfLines;
+        float pixelDividerY = height / numberOfLines;
+
         for (int line = 0; line < numberOfLines; ++line) 
         {
-            curve.stroke(20,20,20);
-            if(line % 3 == 2)
+            stroke(20,20,20);
+            if(line % 3 == 0)
             {
-                curve.stroke(150, 0, 150);
+                stroke(150, 0, 150);
             }
 
-            float lineStartY = line * pixelDividerY;
+            float lineStartY = line * (height / numberOfLines);
             float lineStartX = 0;
-            float lineEndX = pixelDividerX + (pixelDividerX * line);
-            float lineEndY = pixelDividerY * numberOfLines;
-            curve.line(lineStartX, lineStartY, lineEndX, lineEndY);
+            float lineEndX = line * (width / numberOfLines);
+            float lineEndY = height;
+            line(lineStartX, lineStartY, lineEndX, lineEndY);
         }
-        curve.endDraw();
-        curve.save("curve.png");
+        
     }
 
     void drawCircle(float diameter, float circlePointSpan, color strokeColor)
@@ -44,7 +48,7 @@ public class ParabolicMachine
         stroke(strokeColor);
         float radius = diameter / 2;
         float angle = 360 / numberOfLines + 1;
-
+        
         for (int i = 0; i < numberOfLines; ++i)
         {
             if (i * angle <= 360)
@@ -55,7 +59,7 @@ public class ParabolicMachine
                 float x2 = radius * cos(radians((i + 30) * angle));
                 float y2 = radius * sin(radians((i + 30) * angle));
 
-                line(x1 + 500 ,y1 + 500, x2 + 500, y2 + 500);
+                line(x1 + centerOfScreenX ,y1 + centerOfScreenY, x2 + centerOfScreenX, y2 + centerOfScreenY);
             }
         }
     }
