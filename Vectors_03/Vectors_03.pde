@@ -3,6 +3,7 @@ int currentTurn = 1;
 int score = 0;
 int resolutionX = 800;
 int resolutionY = 800;
+
 float shootStrength = 0.2;
 float startAreaWidth = 100;
 float startAreaHeight = 100;
@@ -12,7 +13,6 @@ float goalWidth = 100;
 float goalHeight = 100;
 float goalX;
 float goalY;
-
 
 ArrayList<Circle> playerCircles;
 Circle goalCircle;
@@ -27,8 +27,8 @@ void setup() {
 	createGoal();
 }
 
-void draw() {
-
+void draw()
+{
 	if (currentTurn > maxTurns)
 	{
 		background(0);
@@ -48,7 +48,6 @@ void draw() {
 		movePlayerCircles();
 		drawPlayerCircles();
 	}
-
 }
 
 void createGoal()
@@ -65,7 +64,6 @@ void drawHud()
 	text("Max turns: " + maxTurns, 10, 20);
 	text("Current turn: " + currentTurn, 10, 40);
 	text("Score: " + score, 10, 60);
-
 }
 
 void drawGoal()
@@ -126,7 +124,8 @@ void checkIfScore(Circle playerCircle)
 	}
 }
 
-void keyPressed() {
+void keyPressed()
+{
 	if (key == ' ' && playerState == PlayerState.dead)
 	{
 		println("Restarting...");
@@ -147,7 +146,8 @@ void resetBoard()
 	createGoal();
 }
 
-void mousePressed() {
+void mousePressed() 
+{
 
 	if (mouseButton == LEFT && mouseX < startAreaWidth && mouseY > resolutionY - startAreaHeight) 
 	{
