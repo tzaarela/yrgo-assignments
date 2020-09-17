@@ -88,9 +88,9 @@ public void setInputs(int keyCode, boolean isPressed)
 }
 public class PlayerController
 {
-	float maxSpeed = 1200;
-	float acceleration = 400;
-	float friction = 2;
+	float maxSpeed = 1800;
+	float acceleration = 1800;
+	float friction = 0.9f;
 	float width = 20;
 	float height = 20;
 	float gravity = 980;
@@ -155,10 +155,11 @@ public class PlayerController
 	{
 		if(player.position.y + player.height / 2 >= resolutionY)
 		{
-			println(velocity.y);
 			velocity.y = (bouncyness * -velocity.y);
-			bouncyness -= bouncyness > 0 ? 0.05f * deltaTime : 0;
-			if(velocity.y == 0.0f)
+			bouncyness -= bouncyness > 0 ? 0.10f * deltaTime : 0;
+			println(velocity.y);
+			if(velocity.y > -50)
+				velocity.y = 0;
 				bouncyness = 1;
 		}
 		else
