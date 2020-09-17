@@ -16,11 +16,14 @@ public class InputAndMovement_04 extends PApplet {
 
 int resolutionX = 640;
 int resolutionY = 480;
+float deltaTime;
+float time;
 
 PlayerController player;
 
 public void setup()
 {
+    frameRate(60);
     surface.setSize(resolutionX,resolutionY);
     player = new PlayerController();
     ellipseMode(CENTER);
@@ -29,12 +32,17 @@ public void setup()
 
 public void draw() 
 {
+	long currentTime = millis();
+    deltaTime = (currentTime - time) * 0.001f;
+
 	background(0);
     player.move();
     player.checkWalls();
 
     if(hasGravity)
         player.makeGravity();
+
+    time = currentTime;
 }   
 boolean isLeft, isRight, isUp, isDown;
 boolean hasGravity;
@@ -80,12 +88,12 @@ public void setInputs(int keyCode, boolean isPressed)
 }
 public class PlayerController
 {
-	float maxSpeed = 20;
-	float acceleration = 1;
-	float friction = 30;
+	float maxSpeed = 600;
+	float acceleration = 10;
+	float friction = 300;
 	float width = 20;
 	float height = 20;
-	float gravity = 1.23f;
+	float gravity = 9.8f;
 	float bouncyness = 1;
 	
 	boolean bounce = true;
@@ -117,12 +125,12 @@ public class PlayerController
 		velocity.y = velocity.y >= 0 ? min(velocity.y, maxSpeed) : max(velocity.y, -maxSpeed);
 
 		//friction
-		velocity.x -= velocity.x / friction;
-		velocity.y -= velocity.y / friction;
+		velocity.x -= (velocity.x / friction);
+		velocity.y -= (velocity.y / friction);
 
 		//Set position
-		position.x += velocity.x;
-		position.y += velocity.y;
+		position.x += velocity.x * deltaTime;
+		position.y += velocity.y * deltaTime;
 
 		text("positionX: " + (int)position.x, 5, 30);
 		text("positionY: " + (int)position.y, 5, 40);
@@ -147,9 +155,8 @@ public class PlayerController
 	{
 		if(player.position.y + player.height / 2 >= resolutionY)
 		{
-
 			println(velocity.y);
-			velocity.y = bouncyness * -velocity.y;
+			velocity.y = (bouncyness * -velocity.y);
 			bouncyness -= bouncyness > 0 ? 0.05f : 0;
 			if(velocity.y == 0.0f)
 				bouncyness = 1;
