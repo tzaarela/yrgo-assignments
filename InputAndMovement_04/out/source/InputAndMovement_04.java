@@ -23,7 +23,7 @@ PlayerController player;
 
 public void setup()
 {
-    frameRate(60);
+    frameRate(300);
     surface.setSize(resolutionX,resolutionY);
     player = new PlayerController();
     ellipseMode(CENTER);
@@ -88,12 +88,12 @@ public void setInputs(int keyCode, boolean isPressed)
 }
 public class PlayerController
 {
-	float maxSpeed = 600;
-	float acceleration = 10;
-	float friction = 300;
+	float maxSpeed = 1200;
+	float acceleration = 400;
+	float friction = 2;
 	float width = 20;
 	float height = 20;
-	float gravity = 9.8f;
+	float gravity = 980;
 	float bouncyness = 1;
 	
 	boolean bounce = true;
@@ -119,14 +119,14 @@ public class PlayerController
 		direction.y = PApplet.parseInt(isDown) - PApplet.parseInt(isUp);
 
 		//Acceleration
-		velocity.x += direction.normalize().x * acceleration;
+		velocity.x += direction.normalize().x * acceleration * deltaTime;
 		velocity.x = velocity.x >= 0 ? min(velocity.x, maxSpeed) : max(velocity.x, -maxSpeed);
-		velocity.y += direction.normalize().y * acceleration; 
+		velocity.y += direction.normalize().y * acceleration * deltaTime; 
 		velocity.y = velocity.y >= 0 ? min(velocity.y, maxSpeed) : max(velocity.y, -maxSpeed);
 
 		//friction
-		velocity.x -= (velocity.x / friction);
-		velocity.y -= (velocity.y / friction);
+		velocity.x -= velocity.x / friction * deltaTime;
+		velocity.y -= velocity.y / friction * deltaTime;
 
 		//Set position
 		position.x += velocity.x * deltaTime;
@@ -157,12 +157,12 @@ public class PlayerController
 		{
 			println(velocity.y);
 			velocity.y = (bouncyness * -velocity.y);
-			bouncyness -= bouncyness > 0 ? 0.05f : 0;
+			bouncyness -= bouncyness > 0 ? 0.05f * deltaTime : 0;
 			if(velocity.y == 0.0f)
 				bouncyness = 1;
 		}
 		else
-			velocity.y += gravity;
+			velocity.y += gravity * deltaTime;
 	}
 }
   static public void main(String[] passedArgs) {
